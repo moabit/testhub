@@ -29,26 +29,22 @@ class TestController extends Controller
     public function startTest(int $testId, Request $request, Response $response)
     {
         $test = $this->testRepository->getTestById($testId);
-        if ($request->cookie('guestToken') == null) {
-            $guestToken = Str::random(20);
-            $response->cookie('guestToken', $guestToken, 60 * 24 * 365); //1 год
-        }
-        //$deadline=null;
+        $deadline=null;
         if ($test->time_limit) { //а работает ли?
             $deadline = strtotime('now') + strtotime($test->time_limit);
             session()->put('started_tests.'.$test->id, $deadline); //nested array
         }
-
-
+        
         return redirect()->route('questions', [$test]);
     }
 
-    public function submitAnswers(int $testId, Request $request)
+    public function submitAnswers(int $testId, Request $request, Response $response)
     {
         $test = $this->testRepository->getTestByIdWithQuestionsAndAnswers($testId);
       //  $guestToken = $request->cookie('guestToken');
-        if ($guestToken == null) {
-            throw new AnswerSubmissionException('Missing guest token');
+        if ($request->cookie('guestToken') == null) {
+            $guestToken = Str::random(20);
+            $response->cookie('guestToken', $guestToken, 60 * 24 * 365); //1 год
         }
         $userAnswers = $request->input();
         //  if (count($userAnswers) > $test->questions->count()) {
