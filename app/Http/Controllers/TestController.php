@@ -32,9 +32,9 @@ class TestController extends Controller
         $deadline=null;
         if ($test->time_limit) { //а работает ли?
             $deadline = strtotime('now') + strtotime($test->time_limit);
-            session()->put('started_tests.'.$test->id, $deadline); //nested array
+             //nested array
         }
-        
+        session()->put('started_tests.'.$test->id, $deadline);
         return redirect()->route('questions', [$test]);
     }
 
