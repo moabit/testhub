@@ -26,9 +26,9 @@ class Test extends Model
     public function getQuestionsAttribute():Collection
     {
         $questions = $this->questions()->get();
-        if ($questions->count() < 4) {
-            throw new RelatedModelsNotFoundException('Test can\'t have less then four questions ');
-        }
+      //  if ($questions->count() < 4) {
+       //     throw new RelatedModelsNotFoundException('Test can\'t have less then four questions ');
+     //   }
         return $questions;
     }
 

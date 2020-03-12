@@ -27,7 +27,6 @@ class IndexController extends Controller
     {
        return view('index')->with('tests', $this->testRepository->getTopTests());
 
-
     }
 
     public function showTestPage(Request $request)
@@ -39,10 +38,7 @@ class IndexController extends Controller
     public function showQuestions(int $id): View
     {
         $test = Test::with('questions.answers')->findOrFail($id);
-
-
-
-
+        dd(session()->all());
         return view('questions', ['questions' => $test->questions->sortBy('sequence_number')]);
     }
 

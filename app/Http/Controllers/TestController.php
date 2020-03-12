@@ -33,11 +33,13 @@ class TestController extends Controller
             $guestToken = Str::random(20);
             $response->cookie('guestToken', $guestToken, 60 * 24 * 365); //1 год
         }
-
+        //$deadline=null;
         if ($test->time_limit) { //а работает ли?
             $deadline = strtotime('now') + strtotime($test->time_limit);
-            $request->session()->put($test->id, $deadline);
-        }// тут просто стартуем и достаем только модель теста без отношений.
+            session()->put('started_tests.'.$test->id, $deadline); //nested array
+        }
+
+
         return redirect()->route('questions', [$test]);
     }
 
