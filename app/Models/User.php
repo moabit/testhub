@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use App\Models\{Test, TestResult};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -55,19 +56,30 @@ class User extends Authenticatable
     {
         switch (Auth::check()) {
             case true:
-                $user = Auth::user();
+                return Auth::user();
             case false:
-                if (Cookie::get('uniqueId')) {
-                    $uniqueId = Cookie::get('uniqueId');
+                $userCookieToken = Cookie::get('uniqueId');
+                if ($userCookieToken) {
                     try {
-                        $user = $this->getUserByUniqueId($uniqueId);
+                        $user = User::where('anonymousToken', $userCookieToken)->firstOrFail();
+                        return $user;
                     } catch (ModelNotFoundException $e) {
-                        $user = $this->createAnonymous();
+                        return $this->createAnonymousUser();
                     }
+                } else {
+                    return $this->createAnonymousUser();
                 }
-            default:
-                $user = $this->createAnonymous();
         }
-        return $user;
+    }
+
+    public function isAnonymous(): bool
+    {
+        return $this->anonymous_token ? true : false;
+    }
+
+    private function createAnonymousUser(): void
+    {
+        $token = Str::random(20);
+        Cookie::queue('anonymousToken', $token, 60 * 24 * 365);
     }
 }

@@ -10,13 +10,11 @@
         </li>
 
         <li>
-            <form class="form-inline ml-2 mt-2 mt-md-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Поиск" aria-label="Search">
-                @csrf
+            <form action="search/" method="GET" class="form-inline ml-2 mt-2 mt-md-0 ">
+                <input class="form-control mr-sm-2" type="text" placeholder="Поиск" aria-label="Search"  name="testTitle">
                 <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Поиск</button>
             </form>
         </li>
-
     </ul>
 
 </header>

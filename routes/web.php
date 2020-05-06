@@ -22,3 +22,5 @@ Route::post('/test/{id}/questions', 'TestController@submitAnswers');
 Route::get('test/{id}/questions', 'IndexController@showQuestions')->name('questions')->middleware('checkIfTestStarted');
 
 Route::get('test/{id}/result', 'IndexController@showResult')->name('result');
+
+Route::get('search/', 'SearchController@searchByTestTitle');
