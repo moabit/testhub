@@ -8,5 +8,4 @@ class TestResult extends Model
 {
     public $timestamps = false;
     protected $fillable = ['test_id', 'score', 'guest_token'];
-
 }

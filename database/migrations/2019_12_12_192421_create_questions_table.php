@@ -16,12 +16,8 @@ class CreateQuestionsTable extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('question');
-            $table->bigInteger('test_id');
-            $table->boolean('is_compulsory');
-            $table->bigInteger('points');
-            $table->enum('type', ['choose','open']); //сюда коммент в бд
-            $table->boolean('several_answers');
-            $table->bigInteger('sequence_number');
+            $table->unsignedBigInteger('test_id');
+            $table->unsignedbigInteger('sequence_number');
             $table->foreign('test_id')->references('id')->on('tests');
         });
     }

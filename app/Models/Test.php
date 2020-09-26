@@ -11,6 +11,7 @@ use App\Models\{Tag,Question};
 class Test extends Model
 {
     public $timestamps = false;
+    protected $fillable = ['title','description','pass_rate','attempts'];
 
     public function tags():BelongsToMany
     {

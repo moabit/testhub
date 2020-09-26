@@ -2,11 +2,13 @@
 
 
 namespace App\Services\Strategies;
+
 use App\Models\Question;
+use App\DTO\CompletedTestData\CompletedQuestionData;
 
 abstract class GradeQuestionStrategy
 {
-     public function getGrade(Question $question, array $answer) :float
+    public function getGrade(Question $question, CompletedQuestionData $answer): int
     {
 
     }

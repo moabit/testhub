@@ -12,12 +12,14 @@ use App\Models\Answer;
 class Question extends Model
 {
     public $timestamps = false;
+    protected $fillable = ['question', 'is_compulsory', 'points', 'type', 'several_answers', 'sequence_number'];
 
     public function answers(): HasMany
     {
         return $this->hasMany(Answer::class);
     }
 
+    /*
     public function getAnswersAttribute(): Collection
     {
         $answers = $this->answers()->get();
@@ -28,8 +30,8 @@ class Question extends Model
         }
         return $answers;
     }
-
-    public function getPointsForOneCorrectAnswer ():float
+    */
+    public function getPointsForOneCorrectAnswer(): float
     {
         return round($this->points / $this->numberOfAcceptedAnswers, 1);
     }
@@ -42,5 +44,37 @@ class Question extends Model
     public function getNumberOfAcceptedAnswersAttribute(): int
     {
         return $this->answers->where('is_correct', true)->count();
+    }
+
+    public function hasOnlyOneCorrectAnswer(): bool
+    {
+        if ($this->answers->where('is_correct', true)->count() > 1) {
+            return false;
+        }
+        return true;
+    }
+
+    public function isMultipleChoiceQuestion(): bool
+    {
+        if ($this->answers->count() > 1) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isTextQuestion (): bool
+    {
+        if($this->answers->count()==1) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getCorrectAnswer()
+    {
+        if ($this->hasOnlyOneCorrectAnswer()) {
+            return $this->answers->where('is_correct', true)->first();
+        }
+        return $this->answers->where('is_correct', true);
     }
 }

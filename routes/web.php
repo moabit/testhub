@@ -24,3 +24,11 @@ Route::get('test/{id}/questions', 'IndexController@showQuestions')->name('questi
 Route::get('test/{id}/result', 'IndexController@showResult')->name('result');
 
 Route::get('search/', 'SearchController@searchByTestTitle');
+
+Route::get('/new','IndexController@showAddTest');
+
+Route::post('/new','TestController@addNewTest');
+
+Route::get('/search/tag/{tag}','SearchController@getTestsByTag');
+
+Route::get('/test/', 'IndexController@showTest');

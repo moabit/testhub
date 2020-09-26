@@ -24,7 +24,7 @@ class TestRepository extends Repository
 
     public function getTopTests(): Collection
     {
-        return Test::orderBy('views', 'desc')->limit(Config::get('constants.options.testsOnPage'))->get();
+        return Test::orderBy('attempts', 'desc')->limit(Config::get('constants.options.testsOnPage'))->get();
     }
 
     public function getTestByIdWithQuestionsAndAnswers(int $id): Test

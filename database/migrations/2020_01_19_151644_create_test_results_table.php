@@ -19,6 +19,7 @@ class CreateTestResultsTable extends Migration
             $table->float('score');
             $table->bigInteger('user_id')->nullable();
             $table->string('guest_token')->nullable();
+            $table->bigInteger('time_spent');
             $table->json('user_answers');
             $table->foreign('test_id')->references('id')->on('tests');
             $table->foreign('user_id')->references('id')->on('users');

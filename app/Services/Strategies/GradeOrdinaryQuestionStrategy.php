@@ -2,16 +2,16 @@
 
 
 namespace App\Services\Strategies;
+use App\DTO\CompletedTestData\CompletedQuestionData;
 use App\Models\Question;
 
 
 class GradeOrdinaryQuestionStrategy
 {
-    public function getGrade(Question $question, array $answer):float
+    public function getGrade(Question $question, CompletedQuestionData $answer):int
     {
-        $correctAnswer = $question->answers->where('is_correct', true)->first();
-        if ($correctAnswer->answer == $answer[0]) {
-            return $question->points;
+        if ($question->getCorrectAnswer()->id == $answer->answers[0]) {
+            return 1;
         }
         return 0;
     }

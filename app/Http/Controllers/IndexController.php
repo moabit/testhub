@@ -13,7 +13,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 
 
-
 class IndexController extends Controller
 {
     protected $testRepository;
@@ -25,26 +24,34 @@ class IndexController extends Controller
 
     public function showIndexPage(User $user)
     {
-       return view('index')->with('tests', $this->testRepository->getTopTests());
-
+        return view('index')->with('tests', $this->testRepository->getTopTests());
     }
 
     public function showTestPage(Request $request)
     {
-
-        return view('test')->with('test', $this->testRepository->getTestById(($request->route('id'))));
+        return view('test_description')->with('test', $this->testRepository->getTestById(($request->route('id'))));
     }
 
     public function showQuestions(int $id): View
     {
         $test = Test::with('questions.answers')->findOrFail($id);
-        dd(session()->all());
-        return view('questions', ['questions' => $test->questions->sortBy('sequence_number')]);
+        dd('lol');
+        return view('questions', ['questions' => $test->questions->sortBy('sequence_number'), 'test' => $test]);
     }
 
     public function showResult(int $id): View
     {
         return view('result');
+    }
+
+    public function showAddTest(): View
+    {
+        return view('add_new_test');
+    }
+
+    public function showTest ()
+    {
+        return view('test');
     }
 
 
