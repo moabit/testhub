@@ -23,45 +23,35 @@ class GradeCalculator
         $this->gradeTextQuestionStrategy = $gradeTextQuestionStrategy;
     }
 
-    /*
-    public function getGrade(CompletedTestData $answers, Test $testWithAnswers): float
-    {
-        $points = 0;
-        foreach ($testWithAnswers->questions as $question) {
-            switch ($question) {
-                case $question->isTextQuestion() == true:
-                  $this->gradeTextQuestionStrategy($question, $)
-                    break;
-                default:
-                    $points += $this->gradeOrdinaryQuestionStrategy->getGrade($question, $answers['question_' . $question->id]);
-                    break;
-            }
-        }
-        return $points;
-    }
-    */
-
-    public function getGradee(CompletedTestData $completedTest, Test $testWithAnswers)
+    public function getGrade(CompletedTestData $completedTest, Test $testWithAnswers): int
     {
         $points = 0;
         foreach ($completedTest->questions as $userAnswer) {
             $questionWithAnswers = $testWithAnswers->questions->find($userAnswer->id);
             switch ($questionWithAnswers) {
                 case $questionWithAnswers->isTextQuestion() == true:
-                    echo "lol 1";
                     $points += $this->gradeTextQuestionStrategy->getGrade($questionWithAnswers, $userAnswer);
                     break;
                 case $questionWithAnswers->hasOnlyOneCorrectAnswer() == false:
                     $points += $this->gradeQuestionsWithSeveralAnswerStrategy->getGrade($questionWithAnswers, $userAnswer);
-                    echo "lol 2";
                     break;
                 case $questionWithAnswers->hasOnlyOneCorrectAnswer() == true:
                     $points += $this->gradeOrdinaryQuestionStrategy->getGrade($questionWithAnswers, $userAnswer);
-                    echo "lol 3";
                     break;
             }
         }
         return $points;
+    }
+
+    public function getStatus(bool $deadline, int $grade,?int $passRate): string
+    {
+        $status = 'passed';
+        if (!$deadline) {
+            $status = 'timeElapsed';
+        } elseif ($grade < $passRate) {
+            $status = 'failed';
+        }
+        return $status;
     }
 
 

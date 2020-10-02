@@ -40,32 +40,22 @@ class TestController extends Controller
     public function startTest(int $testId, Request $request, Response $response)
     {
         $test = $this->testRepository->getTestById($testId);
-        $deadline = null;
-
-        if ($test->time_limit) { //а работает ли?
-            $deadline = strtotime('now') + strtotime($test->time_limit);
-            //nested array
-           // $this->timeTracker->setDeadline($request,$test->time_limit, $test->id);
-        }
-
-        session()->put('started_tests.' . $test->id, $deadline);
-
-        return redirect()->route('questions', [$test],$test);
+        $this->timeTracker->start($request, $test->time_limit, $test->id);
+        return redirect()->route('questions', [$test]);
     }
 
     public function submitAnswers(int $testId, Request $request, Response $response)
     {
         $test = $this->testRepository->getTestByIdWithQuestionsAndAnswers($testId);
-        //  $user = User::getUser() Non-static method App\Models\User::getUser() should not be called statically  ;
-        $lolz = new CompletedTestData($request->input('test'));
-        //  if (count($userAnswers) > $test->questions->count()) {
-        //    throw new AnswerSubmissionException('Too much answers submitted');
-        //}
-        $grade = $this->gradeCalculator->getGradee($lolz, $test);
-        dd($grade);
-        $this->testResultRepository->createTestResult($testId, $grade, $user);
-        return redirect()->route('result', [$test])->with('result', $grade)->with('testTitle', $test->title);
-        ///overalpoints= user_points/points *100 и сократить к до долей десятка
+        $deadline = $this->timeTracker->checkDeadline($request, $test->id, $test->time_limit);
+        $timeSpent =$this->timeTracker->stop($request, $test->id);
+        $testDto = new CompletedTestData($request->input('test'));
+        $grade = $this->gradeCalculator->getGrade($testDto, $test);
+        $status=$this->gradeCalculator->getStatus($deadline,$grade,$test->pass_rate);
+        $this->testResultRepository->createTestResult($testId, $grade);
+        $test->increment('attempts');
+        return redirect()->route('result', [$test])->with(['result'=> $grade,'testTitle'=> $test->title,
+            'status'=>$status, 'timeSpent'=>date('H:i:s',$timeSpent),'questionsCount'=>$test->questions->count()]);
     }
 
     public function addNewTest(TestSubmitRequest $request, Response $response)

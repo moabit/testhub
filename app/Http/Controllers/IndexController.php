@@ -35,7 +35,7 @@ class IndexController extends Controller
     public function showQuestions(int $id): View
     {
         $test = Test::with('questions.answers')->findOrFail($id);
-        dd('lol');
+
         return view('questions', ['questions' => $test->questions->sortBy('sequence_number'), 'test' => $test]);
     }
 

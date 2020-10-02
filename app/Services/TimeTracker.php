@@ -7,30 +7,35 @@ use Illuminate\Http\Request;
 
 class TimeTracker
 {
-    protected int $currentTime;
-    protected int $deadline;
-    /*
-    public function __construct(int $currentTime, int $deadline)
+    public function timePassed(Request $request, int $testId): int
     {
-        $this->currentTime = $currentTime;
-        $this->deadline = $deadline;
-    }
-    */
-    public function timePassed(): int
-    {
-
+        return $$request->session()->get('startedTests.' . $testId);
     }
 
-    public function hasDeadlineExpired(): bool
+    public function checkDeadline(Request $request, int $testId, ?int $timeLimit): bool
     {
-
+        if ($timeLimit) {
+            $timeStarted = $request->session()->get('startedTests.' . $testId);
+            $deadline = $timeStarted + $timeLimit * 60;
+            if (strtotime('now') > $deadline) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public function setDeadline(Request $request, int $timeLimit, int $testId)
+    public function start(Request $request, ?int $timeLimit, int $testId): void
     {
-        $deadline = strtotime('now') + strtotime($timeLimit);
-        $arr = ['deadline' => $deadline];
-        $request->session()->put('tests.'.$testId, $arr);
-       // dd($request);
+        if (!$request->session()->get('startedTests.' . $testId)) {
+            //$deadline = $timeLimit ? strtotime('now') + $timeLimit * 60 : null;
+            $request->session()->put('startedTests.' . $testId, strtotime('now'));
+        }
+    }
+
+    public function stop(Request $request, int $testId): int
+    {
+        $timeSpent = strtotime('now') - $request->session()->get('startedTests.' . $testId);
+        $request->session()->forget('startedTests.' . $testId);
+        return $timeSpent;
     }
 }

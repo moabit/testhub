@@ -59,7 +59,7 @@ class Question extends Model
         if ($this->answers->count() > 1) {
             return true;
         }
-        return false;3
+        return false;
     }
 
     public function isTextQuestion (): bool

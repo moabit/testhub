@@ -37,6 +37,13 @@ class TestRepository extends Repository
 
     }
 
+    public function incrementAttempts(int $id): Test
+    {
+        $test = $this->getTestById($id);
+        $test->attempts += 1;
+        return $test->save();
+    }
+
 
 }
 

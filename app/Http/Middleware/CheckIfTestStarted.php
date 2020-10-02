@@ -16,8 +16,8 @@ class CheckIfTestStarted
      */
     public function handle($request, Closure $next  )
     {
-
-        if (!$request->session()->exists('started_tests.'. $request->id)) {
+        if (!$request->session()->exists('startedTests.'. $request->id)) {
+            dd($request);
             return redirect('/home');
         }
         return $next($request);

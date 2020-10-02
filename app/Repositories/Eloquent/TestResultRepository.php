@@ -11,11 +11,13 @@ use App\Models\User;
 
 class TestResultRepository extends Repository
 {
-    public function createTestResult(int $testId, float $grade, User $user): TestResult
+    public function createTestResult(int $testId, int $grade): TestResult
     {
+        /*
         if ($user->isAnonymous()) {
             return TestResult::create(['test_id' => $testId, 'score' => $grade, 'anonymous_token' => $user->anonymous_token]);
         }
-        return TestResult::create(['test_id' => $testId, 'score' => $grade, 'user_id' => $user->id]);
+        */
+        return TestResult::create(['test_id' => $testId, 'score' => $grade]);
     }
 }
