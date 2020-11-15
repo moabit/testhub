@@ -4,7 +4,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\{Models\Test, Repositories\Repository, Exceptions\RelatedModelsNotFoundException};
-use Illuminate\{Database\Eloquent\Collection, Support\Facades\Config};
+use Illuminate\{Database\Eloquent\Collection, Pagination\LengthAwarePaginator, Support\Facades\Config};
 use App\Services\SphinxSearch;
 
 
@@ -22,9 +22,10 @@ class TestRepository extends Repository
         return Test::findOrFail($id);
     }
 
-    public function getTopTests(): Collection
+    public function getTopTests()
     {
-        return Test::orderBy('attempts', 'desc')->limit(Config::get('constants.options.testsOnPage'))->get();
+
+        return Test::withCount('testResults')->orderBy('test_results_count','desc')->limit(Config::get('constants.options.testsOnPage'))->get();
     }
 
     public function getTestByIdWithQuestionsAndAnswers(int $id): Test
@@ -37,11 +38,14 @@ class TestRepository extends Repository
 
     }
 
-    public function incrementAttempts(int $id): Test
+    public function deleteTestById (int $id):void
     {
-        $test = $this->getTestById($id);
-        $test->attempts += 1;
-        return $test->save();
+
+    }
+
+    public function findTestsByIds (?array $ids):LengthAwarePaginator
+    {
+        return Test::whereIn('id', $ids)->paginate(1);
     }
 
 

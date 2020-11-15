@@ -1,6 +1,8 @@
 <?php
 
 return [
-'options' => [
-'testsOnPage' => '5',]
+    'options' => [
+        'testsOnPage' => 10,
+        'testsOnSearchPage' => 20,
+        'testsOnAccountPage' => 20]
 ];

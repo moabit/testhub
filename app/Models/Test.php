@@ -6,37 +6,63 @@ use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\RelatedModelsNotFoundException;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\{Tag,Question};
+use App\Models\{Tag, Question, TestResult, User};
+
 
 class Test extends Model
 {
-    public $timestamps = false;
-    protected $fillable = ['title','description','pass_rate','attempts'];
+    protected $fillable = ['title', 'description', 'pass_rate'];
 
-    public function tags():BelongsToMany
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'tests_tags',
             'test_id', 'tag_id');
     }
 
-    public function questions():HasMany
+    public function questions(): HasMany
     {
         return $this->hasMany(Question::class);
     }
 
-    public function getQuestionsAttribute():Collection
+    public function testResults(): HasMany
+    {
+        return $this->hasMany(TestResult::class);
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'created_by');
+    }
+
+    public function getQuestionsAttribute(): Collection
     {
         $questions = $this->questions()->get();
-      //  if ($questions->count() < 4) {
-       //     throw new RelatedModelsNotFoundException('Test can\'t have less then four questions ');
-     //   }
+        //  if ($questions->count() < 4) {
+        //     throw new RelatedModelsNotFoundException('Test can\'t have less then four questions ');
+        //   }
         return $questions;
     }
 
-    public function getMaximumScoreAttribute():int
+    public function getTruncatedDescription()
+    {
+        $descriptionLength = 240;
+        if (mb_strlen($this->description) < $descriptionLength) {
+            return $this->description;
+        }
+        $truncated = substr($this->description, 0, $descriptionLength);
+        return substr($truncated, 0, strrpos($truncated, ' ')) . '…';
+    }
+
+    public function getMaximumScoreAttribute(): int
     {
         return $this->questions->sum('points');
     }
 
+    public function isCreatedByRegisteredUser(): bool
+    {
+        if ($this->user->get()) {
+            return true;
+        } else return false;
+    }
 
 }

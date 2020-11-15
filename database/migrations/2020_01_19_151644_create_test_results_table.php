@@ -23,7 +23,7 @@ class CreateTestResultsTable extends Migration
             $table->json('user_answers')->nullable();;
             $table->foreign('test_id')->references('id')->on('tests')->nullable();;
             $table->foreign('user_id')->references('id')->on('users')->nullable();;
-
+            $table->dateTime('created_at')->useCurrent();
         });
     }
 

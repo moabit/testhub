@@ -3,9 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Test;
 
 class TestResult extends Model
 {
-    public $timestamps = false;
-    protected $fillable = ['test_id', 'score', 'guest_token'];
+    const UPDATED_AT = null;
+    protected $fillable = ['test_id', 'score', 'guest_token','user_id','time_spent'];
+
+    public function test()
+    {
+        return $this->hasOne(Test::class,'id', 'test_id' );
+    }
 }

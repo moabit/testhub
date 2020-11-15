@@ -48,20 +48,21 @@ class TestController extends Controller
     {
         $test = $this->testRepository->getTestByIdWithQuestionsAndAnswers($testId);
         $deadline = $this->timeTracker->checkDeadline($request, $test->id, $test->time_limit);
-        $timeSpent =$this->timeTracker->stop($request, $test->id);
+        $timeSpent = $this->timeTracker->stop($request, $test->id);
         $testDto = new CompletedTestData($request->input('test'));
         $grade = $this->gradeCalculator->getGrade($testDto, $test);
-        $status=$this->gradeCalculator->getStatus($deadline,$grade,$test->pass_rate);
-        $this->testResultRepository->createTestResult($testId, $grade);
-        $test->increment('attempts');
-        return redirect()->route('result', [$test])->with(['result'=> $grade,'testTitle'=> $test->title,
-            'status'=>$status, 'timeSpent'=>date('H:i:s',$timeSpent),'questionsCount'=>$test->questions->count()]);
+        $status = $this->gradeCalculator->getStatus($deadline, $grade, $test->pass_rate);
+        $this->testResultRepository->createTestResult($testId, $grade,  Auth::id(), $timeSpent);
+        return redirect()->route('result', [$test])->with(['result' => $grade, 'testTitle' => $test->title,
+            'status' => $status, 'timeSpent' => date('H:i:s', $timeSpent), 'questionsCount' => $test->questions->count()]);
     }
 
     public function addNewTest(TestSubmitRequest $request, Response $response)
     {
         //$questions = [['question' => 'vopros', 'answers' => [['answer' => 'otvet', 'isCorrect' => true]]]];
         //  $lolk = new NewTestData(['title' => 'nazvanie', 'questions' => $questions, 'description' => 'opisanie', 'passRate' => 4, 'timeLimit' => 4, 'tags' => ['tag']]);
+        dd($request->all());
+
         $lol = $this->testEditor->addNewTest();
         dd($lol);
         $newTest = $request->input('test');
@@ -83,5 +84,20 @@ class TestController extends Controller
                     'is_correct' => $isCorrect]);
             }
         }
+    }
+
+    public function deleteTest(Request $request, Response $response)
+    {
+        $test = $this->testRepository->getTestByIdWithQuestionsAndAnswers($request->input('id'));
+    }
+
+    public function editTest ()
+    {
+
+    }
+
+    public function showEdit ()
+    {
+
     }
 }

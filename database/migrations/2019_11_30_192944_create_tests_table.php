@@ -17,10 +17,12 @@ class CreateTestsTable extends Migration
             $table->bigIncrements('id');
             $table->string( 'title', 100);
             $table->text('description');
-            $table->unsignedBigInteger('attempts')->default(0);
             $table->unsignedBigInteger('time_limit')->nullable();
             $table->unsignedBigInteger('pass_rate');
+            $table->unsignedbigInteger('created_by');
             $table->string('creator_token')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->nullable;
+            $table->timestamps();
         });
     }
 

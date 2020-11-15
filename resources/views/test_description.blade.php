@@ -7,16 +7,21 @@
             <div class="col">
                 <h2>{{$test->title}}</h2>
                 <div class="mb-4">
-                @foreach($test->tags as $tag)
-                    <a href='/search/tag/{{$tag->title}}' class="badge badge-info">{{$tag->title}}</a>
-                @endforeach
+                    @foreach($test->tags as $tag)
+                        <a href='/search/tag/{{$tag->title}}' class="badge badge-info">{{$tag->title}}</a>
+                    @endforeach
                 </div>
                 <p class="text-secondary test-description font-weight-bold">Описание</p>
                 <p class="mb-4">{{$test->description}}</p>
                 @unless($test->time_limit == null)
                     <p class="font-weight-bold m-0">Время на выполнение: {{$test->time_limit}} минут</p>
                 @endunless
-                <p class="font-weight-bold mb-3">Количество вопросов: {{$test->questions->count()}}</p>
+                <p class="font-weight-bold">Количество вопросов: {{$test->questions->count()}}</p>
+                @if ($test->isCreatedByRegisteredUser())
+                    <p class="font-weight-bold">Составитель теста: {{$test->user->name}}</p>
+                @else
+                    <p class="font-weight-bold mb-3">Составитель теста: Аноним</p>
+                @endif
                 <form action="" method="POST">
                     <button type="submit" class="btn btn-outline-primary">Пройти тест</button>
                     @csrf

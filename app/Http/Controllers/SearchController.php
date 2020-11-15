@@ -14,33 +14,27 @@ class SearchController extends Controller
 {
     protected $sphinxSearch;
     protected $tagRepository;
+    protected $testRepository;
 
-    public function __construct(SphinxSearch $sphinxSearch, TagRepository $tagRepository)
+    public function __construct(SphinxSearch $sphinxSearch,
+                                TagRepository $tagRepository,
+                                TestRepository $testRepository)
     {
         $this->sphinxSearch = $sphinxSearch;
         $this->tagRepository = $tagRepository;
+        $this->testRepository = $testRepository;
     }
 
-    public function searchByTestTitle(Request $request)
+    public function search(Request $request, $tag = null)
     {
-        $currentPage = isset($request['page']) ? $request['page'] : 1;
-        $limit = 10; // search results on a single page
-        $offset = ($currentPage - 1) * $limit;
-        dd(DB::connection('sphinx')->getPDO());
-        // $tests = $this->sphinxSearch->search($request['testTitle'], $offset, $limit);
-    }
-
-    public function getTestsByTag(Request $request)
-    {
-        //$offset = $request->input('offset') ? $request->input('offset') : 0;
-        // $limit = 50;
-        $inputTag = $request->route('tag');
-        $tag = Tag::where('title', $inputTag)->first();
-        if (isset($tag)) {
-            $tests = $tag->tests()->orderBy('views', 'desc')->skip(0)->take(50)->get();
+        if ($tag || (bool)$request->input('isTagSearch')) {
+            $tag =  $tag ?? (string) $request->input('searchInput');
+            $tests = $this->tagRepository->findTestByTag($tag);
+            $title = null;
+        } else {
+            $title = (string) $request->input('searchInput');
+            $tests = $this->testRepository->findTestsByIds($this->sphinxSearch->searchByTitle($title));
         }
-        return view ('search',['tag'=>$tag,'tests'=>$tests]);
+        return view('search', ['tests' => $tests, 'tag'=>$tag,'title'=>$title]);
     }
-
-
 }

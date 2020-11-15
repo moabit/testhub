@@ -13,9 +13,9 @@
             </div>
             <div class="col-md-8 order-md-1">
                 <h4 class="mb-4"><strong>Самые популярные тесты</strong></h4>
-                <div class="row mb-3 ">
+                <div class="row mb-3">
                     <div class="col"><span class="text-secondary font-weight-bold">Тест</span></div>
-                    <div class="col text-center"><span class="text-secondary font-weight-bold">Просмотры за месяц</span></div>
+                    <div class="col text-center"><span class="text-secondary font-weight-bold">Попыток за месяц</span></div>
                 </div>
                 @foreach ($tests as $test)
                     <div class="row  border-bottom box-shadow mb-1">

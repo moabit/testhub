@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     public function tests()
     {
-        return $this->hasMany(Test::class);
+        return $this->hasMany(Test::class,'created_by', 'id' );
     }
 
     public function testResults()
@@ -82,4 +82,5 @@ class User extends Authenticatable
         $token = Str::random(20);
         Cookie::queue('anonymousToken', $token, 60 * 24 * 365);
     }
+
 }
