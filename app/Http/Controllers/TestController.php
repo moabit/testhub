@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TestSubmitRequest;
+use App\DTO\NewTestData\NewTestData;
+use App\Http\Requests\CreateNewTestRequest;
 use Illuminate\Http\{Request, Response};
 use Illuminate\View\View;
 use App\Models\{Test, TestResult, User};
@@ -12,7 +13,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Services\{GradeCalculator, TestEditor, TimeTracker};
 use App\Repositories\Eloquent\{TestRepository, TestResultRepository};
-use App\DTO\NewTestData;
 use App\DTO\CompletedTestData\CompletedTestData;
 
 
@@ -49,41 +49,20 @@ class TestController extends Controller
         $test = $this->testRepository->getTestByIdWithQuestionsAndAnswers($testId);
         $deadline = $this->timeTracker->checkDeadline($request, $test->id, $test->time_limit);
         $timeSpent = $this->timeTracker->stop($request, $test->id);
+        dd($request->input('test'));
         $testDto = new CompletedTestData($request->input('test'));
         $grade = $this->gradeCalculator->getGrade($testDto, $test);
         $status = $this->gradeCalculator->getStatus($deadline, $grade, $test->pass_rate);
-        $this->testResultRepository->createTestResult($testId, $grade,  Auth::id(), $timeSpent);
+        $this->testResultRepository->createTestResult($testId, $grade, Auth::id(), $timeSpent);
         return redirect()->route('result', [$test])->with(['result' => $grade, 'testTitle' => $test->title,
             'status' => $status, 'timeSpent' => date('H:i:s', $timeSpent), 'questionsCount' => $test->questions->count()]);
     }
 
-    public function addNewTest(TestSubmitRequest $request, Response $response)
+    public function addNewTest(CreateNewTestRequest $request, Response $response)
     {
-        //$questions = [['question' => 'vopros', 'answers' => [['answer' => 'otvet', 'isCorrect' => true]]]];
-        //  $lolk = new NewTestData(['title' => 'nazvanie', 'questions' => $questions, 'description' => 'opisanie', 'passRate' => 4, 'timeLimit' => 4, 'tags' => ['tag']]);
-        dd($request->all());
-
-        $lol = $this->testEditor->addNewTest();
-        dd($lol);
-        $newTest = $request->input('test');
-        $newQuestions = $request->input('questions');
-        $correctAnswers = $request->input('correctAnswers');
-        $test = Test::create(['title' => $newTest['title'],
-            'description' => $newTest['description'],
-            'minimum_score' => $newTest['minimum']]);
-        foreach ($newQuestions as $newQuestion) {
-            $question = $test->questions()->create(['question' => $newQuestion[0],
-                'is_compulsory' => true,
-                'points' => 10,
-                'type' => 'choose',
-                'several_answers' => true,
-                'sequence_number' => 1]);
-            for ($i = 0; $i < count($newQuestion['answers']); $i++) {
-                $isCorrect = (in_array($i, $correctAnswers['question' . $question->sequence_number])) ? true : false;
-                $question->answers()->create(['answer' => $newQuestion['answers'][$i],
-                    'is_correct' => $isCorrect]);
-            }
-        }
+        dd("lol");
+        $this->testEditor->addNewTest(new NewTestData($request->all()));
+        dd("win");
     }
 
     public function deleteTest(Request $request, Response $response)
@@ -91,12 +70,12 @@ class TestController extends Controller
         $test = $this->testRepository->getTestByIdWithQuestionsAndAnswers($request->input('id'));
     }
 
-    public function editTest ()
+    public function editTest()
     {
 
     }
 
-    public function showEdit ()
+    public function showEdit()
     {
 
     }

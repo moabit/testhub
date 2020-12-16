@@ -8,6 +8,6 @@ import store from './store/editor';
 new Vue({
     el: '#editor',
     template: '<Editor/>',
-    components: { Editor},
+    components: {Editor},
     store
 })

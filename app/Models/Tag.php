@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Test;
+
 
 class Tag extends Model
 {
     public $timestamps = false;
-    public $fillable = ['title'];
+    protected $fillable = ['title'];
 
     public function tests()
     {

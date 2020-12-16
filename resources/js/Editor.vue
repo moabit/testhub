@@ -17,7 +17,7 @@ import NewQuestions from "./components/editor/NewQuestions";
 import QuestionGuide from "./components/editor/QuestionGuide";
 import SubmitTestForm from "./components/editor/SubmitTestForm";
 import {mapGetters} from "vuex";
-
+import axios from "axios";
 
 export default {
     name: 'editor',
@@ -32,10 +32,8 @@ export default {
     },
     methods: {
         submit() {
-            let formData = formData = new FormData(document.getElementById('form1'));
-            console.log(JSON.stringify(Object.fromEntries(formData)));
+            axios.post("/new",this.$store.state).then((response)=>console.log(response),(error) =>console.log(error));
         }
     }
-
 }
 </script>

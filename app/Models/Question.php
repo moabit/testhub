@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,8 +12,10 @@ use App\Models\Answer;
 
 class Question extends Model
 {
+    use HasFactory;
+
     public $timestamps = false;
-    protected $fillable = ['question', 'is_compulsory', 'points', 'type', 'several_answers', 'sequence_number'];
+    protected $fillable = ['question', 'sequence_number'];
 
     public function answers(): HasMany
     {
@@ -62,9 +65,9 @@ class Question extends Model
         return false;
     }
 
-    public function isTextQuestion (): bool
+    public function isTextQuestion(): bool
     {
-        if($this->answers->count()==1) {
+        if ($this->answers->count() == 1) {
             return true;
         }
         return false;

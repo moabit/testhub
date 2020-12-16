@@ -3,27 +3,23 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Http\Requests\TestSubmitRequest;
+use App\Http\Requests\CreateNewTestRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\{Test, Question, Answer, Tag};
 use Illuminate\Support\Collection;
-use App\DTO\NewTestData;
-use App\DTO\NewAnswerData;
-use App\DTO\NewQuestionData;
+use App\DTO\NewTestData\NewTestData;
+use App\DTO\NewTestData\NewAnswerData;
+use App\DTO\NewTestData\NewQuestionData;
 use Illuminate\Support\Facades\Hash;
 
 class TestEditor
 {
-    public function addNewTest(): Test
+    public function addNewTest(NewTestData $newTestData): Test
     {
-     $quest=[['question' => 'vopros', 'answers' => [['answer' => 'otvet', 'isCorrect' => true]]]];
-       $testik=['title' => 'nazvanie', 'questions' => $quest, 'description' => 'opisanie', 'passRate' => 4, 'timeLimit' => 4, 'tags' => ['tag']];
-     //  TestSubmitRequest $request $request->input('test')
-        $newTestData = new NewTestData($testik);
         DB::beginTransaction();
         $test = Test::create(['title' => $newTestData->title,
             'description' => $newTestData->description,
-            'minimum_score' => $newTestData->passRate,
+            'pass_rate' => $newTestData->passRate,
             'time_limit' => $newTestData->timeLimit,
         ]);
         foreach ($newTestData->tags as $tag) {
@@ -39,11 +35,7 @@ class TestEditor
     private function addNewQuestion(Test $test, NewQuestionData $newQuestion, int $index)
     {
         $question = $test->questions()->create(
-            ['question' => $newQuestion->question,
-                'is_compulsory' => true,
-                'points' => 10,
-                'type' => 'choose',
-                'several_answers' => true,
+            ['question' => $newQuestion->text,
                 'sequence_number' => $index]);
         foreach ($newQuestion->answers as $answer) {
             $this->addNewAnswer($question, $answer);
@@ -53,7 +45,7 @@ class TestEditor
     private function addNewAnswer(Question $question, NewAnswerData $answer)
     {
         $question->answers()->create(
-            ['answer' => $answer->answer, 'is_correct' => $answer->isCorrect]
+            ['answer' => $answer->text, 'is_correct' => $answer->isTrue]
         );
     }
 

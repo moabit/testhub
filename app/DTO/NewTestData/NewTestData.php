@@ -1,16 +1,17 @@
 <?php
-declare(strict_types=1);
 
-namespace App\DTO;
 
-use App\DTO\NewQuestionData;
+namespace App\DTO\NewTestData;
+
+use App\DTO\DataTransferObject;
+use App\DTO\NewTestData\NewQuestionData;
 
 class NewTestData extends DataTransferObject
 {
     public string $title;
     public string $description;
     public int $passRate;
-    public int $timeLimit;
+    public $timeLimit;
     public array $tags;
     public array $questions;
 

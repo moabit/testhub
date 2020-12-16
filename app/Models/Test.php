@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\RelatedModelsNotFoundException;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
@@ -11,6 +12,8 @@ use App\Models\{Tag, Question, TestResult, User};
 
 class Test extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['title', 'description', 'pass_rate'];
 
     public function tags(): BelongsToMany
@@ -36,11 +39,7 @@ class Test extends Model
 
     public function getQuestionsAttribute(): Collection
     {
-        $questions = $this->questions()->get();
-        //  if ($questions->count() < 4) {
-        //     throw new RelatedModelsNotFoundException('Test can\'t have less then four questions ');
-        //   }
-        return $questions;
+        return $this->questions()->get();
     }
 
     public function getTruncatedDescription()
@@ -60,9 +59,11 @@ class Test extends Model
 
     public function isCreatedByRegisteredUser(): bool
     {
-        if ($this->user->get()) {
+        if ($this->user()->get()->isEmpty()) {
+            return false;
+        } else {
             return true;
-        } else return false;
+        }
     }
 
 }

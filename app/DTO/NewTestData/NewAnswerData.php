@@ -2,8 +2,8 @@
 declare(strict_types=1);
 
 
-namespace App\DTO;
-
+namespace App\DTO\NewTestData;
+use App\DTO\DataTransferObject;
 
 class NewAnswerData extends DataTransferObject
 {

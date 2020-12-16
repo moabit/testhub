@@ -16,7 +16,9 @@ class GradeCalculator
     protected GradeQuestionsWithSeveralAnswerStrategy $gradeQuestionsWithSeveralAnswerStrategy;
     protected GradeTextQuestionStrategy $gradeTextQuestionStrategy;
 
-    public function __construct(GradeOrdinaryQuestionStrategy $gradeOrdinaryQuestionStrategy, GradeQuestionsWithSeveralAnswerStrategy $gradeQuestionsWithSeveralAnswerStrategy, GradeTextQuestionStrategy $gradeTextQuestionStrategy)
+    public function __construct(GradeOrdinaryQuestionStrategy $gradeOrdinaryQuestionStrategy,
+                                GradeQuestionsWithSeveralAnswerStrategy $gradeQuestionsWithSeveralAnswerStrategy,
+                                GradeTextQuestionStrategy $gradeTextQuestionStrategy)
     {
         $this->gradeOrdinaryQuestionStrategy = $gradeOrdinaryQuestionStrategy;
         $this->gradeQuestionsWithSeveralAnswerStrategy = $gradeQuestionsWithSeveralAnswerStrategy;
@@ -43,7 +45,7 @@ class GradeCalculator
         return $points;
     }
 
-    public function getStatus(bool $deadline, int $grade,?int $passRate): string
+    public function getStatus(bool $deadline, int $grade, ?int $passRate): string
     {
         $status = 'passed';
         if (!$deadline) {

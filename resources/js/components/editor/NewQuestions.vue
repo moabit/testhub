@@ -19,9 +19,8 @@
                     </div>
                     <div class="col-8">
                         <textarea id="question" class="form-control" placeholder=""
-                                  :name="`questions[question${question.id}][]`"
                                   @input="updateQuestionText($event.target.value, question.id)">{{
-                                question.text
+                                question.question
                             }}</textarea>
                     </div>
                 </div>
@@ -49,7 +48,7 @@
                     </div>
                     <div class="col-8">
                         <input type="text" class="form-control" placeholder="Ответ"
-                               v-bind:id="`correctAnswer${question.id}`" v-bind:value="answers(question.id)[0].text">
+                               v-bind:id="`correctAnswer${question.id}`" @input="updateAnswer($event.target.value, answers(question.id)[0].id, question.id)" >
                     </div>
                 </div>
                 <div v-if="answersCount(question.id)>1">
@@ -72,12 +71,12 @@
                         <template v-for="answer in answers(question.id)">
                             <div class="col-4 mt-1">
                                 <input type="text" class="form-control" placeholder="Ответ"
-                                       name="`questions[question${index}][answers]`" v-bind:value="answer.text"
+                                       v-bind:value="answer.answer"
                                        @input="updateAnswer($event.target.value, answer.id, question.id)">
                             </div>
                             <div class="col-2">
                                 <input class="form-check-input" type="checkbox"
-                                       name="isTrue" @change="setAnswerStatus($event.target.checked, answer.id, question.id)">
+                                       @change="setAnswerStatus($event.target.checked, answer.id, question.id)">
                             </div>
                         </template>
                     </div>
@@ -141,10 +140,10 @@ export default {
             this.$store.commit('updateQuestionText', {value: value, id: id});
         },
         updateAnswer(value, answerId, questionId) {
-            this.$store.commit('updateAnswer', {value: value, answerId: answerId, questionId:questionId});
+            this.$store.commit('updateAnswer', {value: value, answerId: answerId, questionId: questionId});
         },
         setAnswerStatus(value, answerId, questionId) {
-            this.$store.commit('setAnswerStatus', {value: value, answerId: answerId, questionId:questionId});
+            this.$store.commit('setAnswerStatus', {value: value, answerId: answerId, questionId: questionId});
         }
     }
 }

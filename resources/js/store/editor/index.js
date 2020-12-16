@@ -1,25 +1,18 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
-import question from "./modules/question";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        hasTimeLimit: false,
-        timeLimit: false,
+        timeLimit: null,
         tags: [],
-        questions: [
-        ],
-        passRate: 2,
+        questions: [],
+        passRate: null,
         title: "",
         description: ""
     },
     mutations: {
-        switchTimeLimit: state => {
-            state.hasTimeLimit = !state.hasTimeLimit;
-            state.timeLimit = null;
-        },
         addTag: (state, tag) => {
             state.tags.push(tag);
         },
@@ -35,15 +28,15 @@ export default new Vuex.Store({
                 if (question.answers.length === 0) {
                     maxId = 0;
                 } else {
-                    if (question.answers.length===1) {
-                        question.answers[0].isTrue = false;
+                    if (question.answers.length === 1) {
+                        question.answers[0].isCorrect = false;
                     }
                     maxId = Math.max.apply(Math, question.answers.map(function (answer) {
                         return answer.id;
                     }));
                 }
                 for (let i = 1; i < dif + 1; i++) {
-                    question.answers.push({id: maxId + i});
+                    question.answers.push({id: maxId + i,isCorrect : false});
                 }
             } else {
                 dif = question.answers.length - payload.value;
@@ -52,7 +45,7 @@ export default new Vuex.Store({
                 }
             }
             if (question.answers.length === 1) {
-                question.answers[0].isTrue = true;
+                question.answers[0].isCorrect = true;
             }
         },
         addQuestion: (state) => {
@@ -60,17 +53,11 @@ export default new Vuex.Store({
             state.questions.length !== 0 ? maxId = Math.max.apply(Math, state.questions.map(function (question) {
                 return question.id;
             })) : maxId = 0;
-            state.questions.push({id: maxId + 1, text: '', answers: []});
-        },
-        changeQuestionType: (state, payload) => {
-
+            state.questions.push({id: maxId + 1, question: '', answers: []});
         },
         deleteQuestion: (state, id) => {
             let questionIndex = state.questions.findIndex(question => question.id === id);
             state.questions.splice(questionIndex, 1);
-        },
-        changePassRate: (state, value) => {
-            state.passRate = value;
         },
         updateQuestions: (state, value) => {
             state.questions = value;
@@ -82,14 +69,20 @@ export default new Vuex.Store({
             state.description = value;
         },
         updateQuestionText: (state, payload) => {
-            state.questions.find(question => question.id === payload.id).text = payload.value;
+            state.questions.find(question => question.id === payload.id).question = payload.value;
         },
         updateAnswer: (state, payload) => {
-            state.questions.find(question => question.id === payload.questionId).answers.find(answer => answer.id === payload.answerId).text = payload.value;
+            state.questions.find(question => question.id === payload.questionId).answers.find(answer => answer.id === payload.answerId).answer = payload.value;
 
         },
         setAnswerStatus: (state, payload) => {
-            state.questions.find(question => question.id === payload.questionId).answers.find(answer => answer.id === payload.answerId).isTrue = payload.value;
+            state.questions.find(question => question.id === payload.questionId).answers.find(answer => answer.id === payload.answerId).isCorrect = payload.value;
+        },
+        updatePassRate: (state, value) => {
+            state.passRate = value === null ? null : parseInt(value);
+        },
+        updateTimeLimit: (state, value) => {
+            state.timeLimit = value === null ? null : parseInt(value);
         }
 
     },

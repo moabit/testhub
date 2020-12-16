@@ -10,15 +10,14 @@ class CheckIfTestStarted
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
-    public function handle($request, Closure $next  )
+    public function handle($request, Closure $next)
     {
-        if (!$request->session()->exists('startedTests.'. $request->id)) {
-            dd($request);
-            return redirect('/home');
+        if (!$request->session()->exists('startedTests.' . $request->id)) {
+            return redirect('/');
         }
         return $next($request);
     }

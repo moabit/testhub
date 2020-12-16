@@ -21,7 +21,7 @@ class CreateTestsTable extends Migration
             $table->unsignedBigInteger('pass_rate');
             $table->unsignedbigInteger('created_by');
             $table->string('creator_token')->nullable();
-            $table->foreign('created_by')->references('id')->on('users')->nullable;
+            $table->foreign('created_by')->nullable()->references('id')->on('users');
             $table->timestamps();
         });
     }

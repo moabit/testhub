@@ -7,7 +7,7 @@
             </div>
             <div class="col-8">
                 <input type="text" class="form-control" placeholder="Название вашего теста" id="testTitle"
-                       name="test[title]" v-model="title">
+                       v-model="title">
             </div>
         </div>
         <div class="row m-3 justify-content-start ">
@@ -15,8 +15,8 @@
                 <label for="description" class="font-weight-bold">Описание теста</label>
             </div>
             <div class="col-8">
-                <textarea id="description" name="test[description]" class="form-control"
-                          placeholder="Напишете пару слов о тесте" v-model="description"></textarea>
+                <textarea id="description" class="form-control" placeholder="Напишете пару слов о тесте"
+                          v-model="description"></textarea>
             </div>
         </div>
         <div class="row m-3">
@@ -25,44 +25,41 @@
             </div>
             <div class="col-8">
                 <div>
-                    <input type="radio" id="withoutLimit" name="test[timeLimit]" value="false" @click="switchTimeLimit"
-                           v-bind:checked="!hasTimeLimit">
+                    <input type="radio" id="withoutLimit" @click="changeTimeLimit(null)"
+                           v-bind:checked="timeLimit===null">
                     <label for="withoutLimit">Без ограничения</label>
                 </div>
                 <div>
                     <div class="row">
                         <div class="col">
-                            <input type="radio" id="withLimit" @click="switchTimeLimit">
+                            <input type="radio" id="withLimit" @click="changeTimeLimit(30)">
                             <label for="withLimit">С ограничением (в минутах)</label></div>
                         <div class="col">
-                            <input type="number" v-model="timeLimit" name="test[timeLimit]"
-                                   v-bind:disabled="!hasTimeLimit">
+                            <input type="number" v-bind:disabled="!(timeLimit!==null)" v-model="timeLimit">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="row m-3">
             <div class="col-4">
                 <span class="font-weight-bold">Минимум для прохождения</span>
             </div>
             <div class="col-8">
                 <div>
-                    <input type="radio" id="withoutPassRate" name="test[passRate]" value="false"
-                           @click="changePassRate(false)"
-                           v-bind:checked="passRate===false">
+                    <input type="radio" id="withoutPassRate" @click="changePassRate(null)"
+                           v-bind:checked="passRate===null">
                     <label for="withoutPassRate">Без минимума</label>
                 </div>
                 <div>
                     <div class="row">
                         <div class="col">
-                            <input type="radio" id="withPassRate" name="limit" @click="changePassRate(30)"
-                                   v-bind:checked="passRate!==false">
+                            <input type="radio" id="withPassRate" @click="changePassRate(30)"
+                                   v-bind:checked="passRate!==null">
                             <label for="withPassRate">Минимум</label>
                         </div>
                         <div class="col">
-                            <input type="number" v-model="passRate" name="test[passRate]">
+                            <input type="number" v-model="passRate">
                         </div>
                     </div>
                 </div>
@@ -114,14 +111,24 @@ export default {
         hasTimeLimit() {
             return this.$store.state.hasTimeLimit;
         },
-        timeLimit() {
-            return this.$store.state.timeLimit;
-        },
         tags() {
             return this.$store.state.tags;
         },
-        passRate() {
-            return this.$store.state.passRate;
+        passRate: {
+            get() {
+                return this.$store.state.passRate;
+            },
+            set(value) {
+                this.$store.commit('updatePassRate', value)
+            }
+        },
+        timeLimit: {
+            get() {
+                return this.$store.state.timeLimit;
+            },
+            set(value) {
+                this.$store.commit('updateTimeLimit', value)
+            }
         },
         title: {
             get() {
@@ -131,7 +138,7 @@ export default {
                 this.$store.commit('updateTitle', value);
             }
         },
-        description:{
+        description: {
             get() {
                 return this.$store.state.description;
             },
@@ -141,8 +148,8 @@ export default {
         }
     },
     methods: {
-        switchTimeLimit() {
-            this.$store.commit('switchTimeLimit');
+        changeTimeLimit(value) {
+            this.$store.commit('updateTimeLimit', value);
         },
         addTag() {
             this.$store.commit('addTag', this.tag)
@@ -152,7 +159,7 @@ export default {
             this.$store.commit('deleteTag', tag)
         },
         changePassRate(value) {
-            this.$store.commit('changePassRate', value)
+            this.$store.commit('updatePassRate', value)
         }
     }
 }
