@@ -19,4 +19,15 @@ class CompletedTestData extends DataTransferObject
             $question = new CompletedQuestionData($question);
         }
     }
+
+    public function getAnswers(int $id): ?CompletedQuestionData
+    {
+        $answers = null;
+        foreach ($this->questions as $question) {
+            if ($question->id == $id) {
+                $answers = $question;
+            }
+        }
+        return $answers;
+    }
 }

@@ -21,8 +21,8 @@ class CreateTestResultsTable extends Migration
             $table->string('guest_token')->nullable();
             $table->bigInteger('time_spent')->nullable();
             $table->json('user_answers')->nullable();;
-            $table->foreign('test_id')->references('id')->on('tests')->nullable();;
-            $table->foreign('user_id')->references('id')->on('users')->nullable();;
+            $table->foreign('test_id')->references('id')->on('tests')->onDelete('cascade')->nullable();;
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->nullable();;
             $table->dateTime('created_at')->useCurrent();
         });
     }

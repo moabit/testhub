@@ -21,7 +21,6 @@ class GradeQuestionsWithSeveralAnswerStrategy
         $points = 0;
         $question->getCorrectAnswer()->map(
             function ($correctAnswer) use (&$points, $userAnswer, $question) {
-
                 if (in_array($correctAnswer->id, $userAnswer->answers)) {
                     $points += 1;
                 }

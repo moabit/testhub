@@ -28,17 +28,17 @@ class GradeCalculator
     public function getGrade(CompletedTestData $completedTest, Test $testWithAnswers): int
     {
         $points = 0;
-        foreach ($completedTest->questions as $userAnswer) {
-            $questionWithAnswers = $testWithAnswers->questions->find($userAnswer->id);
-            switch ($questionWithAnswers) {
-                case $questionWithAnswers->isTextQuestion() == true:
-                    $points += $this->gradeTextQuestionStrategy->getGrade($questionWithAnswers, $userAnswer);
+        foreach ($testWithAnswers->questions as $question) {
+            $userAnswers = $completedTest->getAnswers($question->id);
+            switch ($question) {
+                case $question->isTextQuestion() == true:
+                    $points += $this->gradeTextQuestionStrategy->getGrade($question, $userAnswers);
                     break;
-                case $questionWithAnswers->hasOnlyOneCorrectAnswer() == false:
-                    $points += $this->gradeQuestionsWithSeveralAnswerStrategy->getGrade($questionWithAnswers, $userAnswer);
+                case $question->hasOnlyOneCorrectAnswer() == false:
+                    $points += $this->gradeQuestionsWithSeveralAnswerStrategy->getGrade($question, $userAnswers);
                     break;
-                case $questionWithAnswers->hasOnlyOneCorrectAnswer() == true:
-                    $points += $this->gradeOrdinaryQuestionStrategy->getGrade($questionWithAnswers, $userAnswer);
+                case $question->hasOnlyOneCorrectAnswer() == true:
+                    $points += $this->gradeOrdinaryQuestionStrategy->getGrade($question, $userAnswers);
                     break;
             }
         }

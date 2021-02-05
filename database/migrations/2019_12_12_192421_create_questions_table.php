@@ -18,7 +18,7 @@ class CreateQuestionsTable extends Migration
             $table->text('question');
             $table->unsignedBigInteger('test_id');
             $table->unsignedbigInteger('sequence_number');
-            $table->foreign('test_id')->references('id')->on('tests');
+            $table->foreign('test_id')->references('id')->on('tests')->onDelete('cascade');
         });
     }
 

@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\{Question, Answer, Test};
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class QuestionFactory extends Factory
+class TagFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Question::class;
+    protected $model = Tag::class;
 
     /**
      * Define the model's default state.
@@ -21,11 +21,8 @@ class QuestionFactory extends Factory
      */
     public function definition()
     {
-        static $seq=0;
         return [
-            'test_id' => Test::factory(),
-            'question' => $this->faker->sentence($nbWords = 10, $variableNbWords = true),
-            'sequence_number' => $seq++,
+            'title' => $this->faker->word()
         ];
     }
 }

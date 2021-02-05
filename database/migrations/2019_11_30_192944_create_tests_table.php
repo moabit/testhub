@@ -18,10 +18,10 @@ class CreateTestsTable extends Migration
             $table->string( 'title', 100);
             $table->text('description');
             $table->unsignedBigInteger('time_limit')->nullable();
-            $table->unsignedBigInteger('pass_rate');
-            $table->unsignedbigInteger('created_by');
+            $table->unsignedBigInteger('pass_rate')->nullable();
+            $table->unsignedbigInteger('created_by')->nullable();
             $table->string('creator_token')->nullable();
-            $table->foreign('created_by')->nullable()->references('id')->on('users');
+            $table->foreign('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

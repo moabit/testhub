@@ -9,7 +9,7 @@ class TimeTracker
 {
     public function timePassed(Request $request, int $testId): int
     {
-        return $$request->session()->get('startedTests.' . $testId);
+        return $request->session()->get('startedTests.' . $testId);
     }
 
     public function checkDeadline(Request $request, int $testId, ?int $timeLimit): bool
@@ -24,7 +24,7 @@ class TimeTracker
         return true;
     }
 
-    public function start(Request $request, ?int $timeLimit, int $testId): void
+    public function start($request, int $testId): void
     {
         if (!$request->session()->get('startedTests.' . $testId)) {
             //$deadline = $timeLimit ? strtotime('now') + $timeLimit * 60 : null;

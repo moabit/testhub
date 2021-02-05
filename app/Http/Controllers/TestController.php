@@ -15,7 +15,6 @@ use App\Services\{GradeCalculator, TestEditor, TimeTracker};
 use App\Repositories\Eloquent\{TestRepository, TestResultRepository};
 use App\DTO\CompletedTestData\CompletedTestData;
 
-
 class TestController extends Controller
 {
     protected GradeCalculator $gradeCalculator;
@@ -49,7 +48,6 @@ class TestController extends Controller
         $test = $this->testRepository->getTestByIdWithQuestionsAndAnswers($testId);
         $deadline = $this->timeTracker->checkDeadline($request, $test->id, $test->time_limit);
         $timeSpent = $this->timeTracker->stop($request, $test->id);
-        dd($request->input('test'));
         $testDto = new CompletedTestData($request->input('test'));
         $grade = $this->gradeCalculator->getGrade($testDto, $test);
         $status = $this->gradeCalculator->getStatus($deadline, $grade, $test->pass_rate);

@@ -6,7 +6,7 @@ use App\DTO\DataTransferObject;
 
 class CompletedQuestionData extends DataTransferObject
 {
-    public  $id;
+    public int $id;
     public array $answers;
 
     public function __construct(array $params)

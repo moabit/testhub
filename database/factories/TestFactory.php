@@ -23,19 +23,8 @@ class TestFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->word(),
+            'title' => mb_convert_case($this->faker->word(), MB_CASE_TITLE, 'UTF-8'),
             'description' => $this->faker->paragraph($nbSentences = 3, $variableNbSentences = true),
         ];
-    }
-
-    public function basicTest (int $randomNumberOfQuestions)
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'questions' => function (array $attributes) {
-                    return Question::factory()->count(3);
-                },
-            ];
-        });
     }
 }

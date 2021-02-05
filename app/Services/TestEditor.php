@@ -35,7 +35,7 @@ class TestEditor
     private function addNewQuestion(Test $test, NewQuestionData $newQuestion, int $index)
     {
         $question = $test->questions()->create(
-            ['question' => $newQuestion->text,
+            ['question' => $newQuestion->question,
                 'sequence_number' => $index]);
         foreach ($newQuestion->answers as $answer) {
             $this->addNewAnswer($question, $answer);
@@ -45,7 +45,7 @@ class TestEditor
     private function addNewAnswer(Question $question, NewAnswerData $answer)
     {
         $question->answers()->create(
-            ['answer' => $answer->text, 'is_correct' => $answer->isTrue]
+            ['answer' => $answer->answer, 'is_correct' => $answer->isCorrect]
         );
     }
 

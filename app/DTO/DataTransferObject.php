@@ -11,6 +11,7 @@ abstract class DataTransferObject
         $refClass = new \ReflectionClass(static::class);
         foreach ($refClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $refProperty) {
             $property = $refProperty->getName();
+            settype($params[$property], $refProperty->getType()->getName());
             $this->{$property} = $params[$property];
         }
     }
